@@ -26,6 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                // CSRF protection is disabled for stateless REST API using JWT tokens
+                // This is safe because:
+                // 1. API uses JWT token-based authentication (stateless)
+                // 2. No session cookies are used
+                // 3. Clients are expected to be non-browser applications (Angular/CLI)
                 .csrf().disable()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
