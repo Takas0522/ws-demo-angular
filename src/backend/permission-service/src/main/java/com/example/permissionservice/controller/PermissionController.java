@@ -103,8 +103,8 @@ public class PermissionController {
      */
     private String getAuthenticatedUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() != null) {
-            return authentication.getPrincipal().toString();
+        if (authentication != null && authentication.getName() != null) {
+            return authentication.getName();
         }
         return "system";
     }
