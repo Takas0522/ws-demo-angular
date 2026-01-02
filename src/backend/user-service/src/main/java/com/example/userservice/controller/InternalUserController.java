@@ -63,8 +63,11 @@ public class InternalUserController {
                         key.getResponseBody(), CreateUserProfileResponse.class);
                 return ResponseEntity.status(key.getResponseStatusCode()).body(cachedResponse);
             } catch (Exception e) {
-                log.error("Failed to deserialize cached response", e);
-                // If deserialization fails, proceed with the request
+                log.error("Failed to deserialize cached response for idempotency key: {}", idempotencyKey, e);
+                CreateUserProfileResponse errorResponse = CreateUserProfileResponse.builder()
+                        .message("Failed to retrieve cached response")
+                        .build();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
             }
         }
         
