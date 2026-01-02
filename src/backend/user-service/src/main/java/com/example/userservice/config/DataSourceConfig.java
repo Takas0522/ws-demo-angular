@@ -53,27 +53,27 @@ public class DataSourceConfig {
      * @return DataSource with retry capability
      */
     @Bean
-    @Retryable(
-        value = SQLException.class,
-        maxAttempts = 5,
-        backoff = @org.springframework.retry.annotation.Backoff(delay = 2000)
-    )
     public DataSource dataSource(DataSourceProperties properties, RetryTemplate retryTemplate) {
         log.info("Configuring DataSource with retry capability");
         
-        return retryTemplate.execute(context -> {
-            log.info("Attempting to connect to database (attempt {})", context.getRetryCount() + 1);
-            try {
-                DataSource dataSource = properties.initializeDataSourceBuilder().build();
-                // Test the connection
-                dataSource.getConnection().close();
-                log.info("Successfully connected to database");
-                return dataSource;
-            } catch (SQLException e) {
-                log.warn("Failed to connect to database (attempt {}): {}", 
-                    context.getRetryCount() + 1, e.getMessage());
-                throw e;
-            }
-        });
+        try {
+            return retryTemplate.execute(context -> {
+                log.info("Attempting to connect to database (attempt {})", context.getRetryCount() + 1);
+                try {
+                    DataSource dataSource = properties.initializeDataSourceBuilder().build();
+                    // Test the connection
+                    dataSource.getConnection().close();
+                    log.info("Successfully connected to database");
+                    return dataSource;
+                } catch (SQLException e) {
+                    log.warn("Failed to connect to database (attempt {}): {}", 
+                        context.getRetryCount() + 1, e.getMessage());
+                    throw new RuntimeException("Failed to connect to database", e);
+                }
+            });
+        } catch (Exception e) {
+            log.error("Failed to configure DataSource after retries", e);
+            throw new RuntimeException("Failed to configure DataSource", e);
+        }
     }
 }
