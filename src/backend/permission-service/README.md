@@ -62,6 +62,134 @@ Or using java:
 java -jar target/permission-service-1.0.0.jar
 ```
 
+## API Endpoints
+
+### Application Management
+
+#### GET /api/applications
+Get all applications in the system.
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "appCode": "USER_MGMT",
+    "appName": "User Management",
+    "description": "Manage user accounts, profiles, and authentication",
+    "enabled": true
+  }
+]
+```
+
+### Permission Management
+
+#### GET /api/users/{userId}/permissions
+Get all permissions for a specific user.
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "application": {
+      "id": 1,
+      "appCode": "USER_MGMT",
+      "appName": "User Management",
+      "enabled": true
+    },
+    "permissionLevel": {
+      "id": 3,
+      "levelCode": "ADMIN",
+      "levelName": "Administrator",
+      "levelOrder": 3
+    },
+    "grantedAt": "2024-01-01T12:00:00",
+    "grantedBy": "system",
+    "expiresAt": null
+  }
+]
+```
+
+#### POST /api/permissions
+Create a new permission for a user.
+
+**Request Body:**
+```json
+{
+  "userId": 1,
+  "applicationId": 1,
+  "permissionLevelId": 2,
+  "grantedBy": "admin",
+  "expiresAt": null
+}
+```
+
+**Response:**
+```json
+{
+  "id": 15,
+  "userId": 1,
+  "application": {...},
+  "permissionLevel": {...},
+  "grantedAt": "2024-01-01T12:00:00",
+  "grantedBy": "admin",
+  "expiresAt": null
+}
+```
+
+#### PUT /api/permissions/{permissionId}
+Update an existing permission.
+
+**Request Body:**
+```json
+{
+  "permissionLevelId": 3,
+  "expiresAt": "2025-12-31T23:59:59",
+  "grantedBy": "admin"
+}
+```
+
+**Response:**
+```json
+{
+  "id": 15,
+  "userId": 1,
+  "application": {...},
+  "permissionLevel": {...},
+  "grantedAt": "2024-01-01T12:00:00",
+  "grantedBy": "admin",
+  "expiresAt": "2025-12-31T23:59:59"
+}
+```
+
+#### DELETE /api/permissions/{permissionId}
+Delete a permission.
+
+**Response:** 204 No Content
+
+## Authentication
+
+All API endpoints require JWT authentication. Include the JWT token in the Authorization header:
+
+```
+Authorization: Bearer <jwt-token>
+```
+
+The JWT token must be signed with the private key corresponding to the public key configured at `/keys/public_key.pem`.
+
+## Audit Logging
+
+All permission changes (CREATE, UPDATE, DELETE) are automatically logged in the `permission_audit_log` table with:
+- User ID
+- Application ID
+- Permission Level ID
+- Action performed
+- Who performed the action
+- Timestamp
+- Old and new permission levels (for updates)
+
 ## Sample Data
 
 The service includes seed data for:
@@ -73,6 +201,7 @@ The service includes seed data for:
 
 - Spring Boot 2.7.18
 - Spring Data JPA
+- Spring Security
 - PostgreSQL Driver
 - Shared Library (JWT utilities and common DTOs)
 - Lombok
