@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: bff-service
+
+server:
+  port: 8080
+
+# Backend service URLs
+backend:
+  services:
+    auth:
+      url: ${AUTH_SERVICE_URL:http://localhost:8081}
+    user:
+      url: ${USER_SERVICE_URL:http://localhost:8082}
+    permission:
+      url: ${PERMISSION_SERVICE_URL:http://localhost:8083}
+
+# JWT configuration
+jwt:
+  public-key-path: ${JWT_PUBLIC_KEY_PATH:/keys/public_key.pem}
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.example.bffservice: DEBUG
