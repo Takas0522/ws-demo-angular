@@ -3,6 +3,14 @@ set -e
 
 echo "Running post-create setup..."
 
+# Generate JWT RSA keys if they don't exist
+if [ ! -f .devcontainer/keys/private_key.pem ] || [ ! -f .devcontainer/keys/public_key.pem ]; then
+  echo "Generating JWT RSA key pair..."
+  bash .devcontainer/generate-keys.sh
+else
+  echo "JWT RSA keys already exist, skipping generation"
+fi
+
 # Install npm dependencies if package.json exists
 if [ -f package.json ]; then
   echo "Installing npm dependencies..."
