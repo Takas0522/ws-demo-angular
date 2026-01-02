@@ -54,6 +54,14 @@ class EntityTest {
                 .build();
 
         assertTrue(token.isExpired());
+        
+        // Test with explicit time
+        LocalDateTime checkTime = expiresAt.plusHours(1);
+        assertTrue(token.isExpired(checkTime));
+        
+        // Test not expired with earlier time
+        LocalDateTime earlierTime = expiresAt.minusHours(1);
+        assertFalse(token.isExpired(earlierTime));
     }
 
     @Test

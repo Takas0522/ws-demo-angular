@@ -43,6 +43,16 @@ public class RefreshToken {
      * @return true if expired, false otherwise
      */
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(expiresAt);
+        return isExpired(LocalDateTime.now());
+    }
+
+    /**
+     * Check if the refresh token has expired at a specific time
+     *
+     * @param now the time to check against
+     * @return true if expired, false otherwise
+     */
+    public boolean isExpired(LocalDateTime now) {
+        return now.isAfter(expiresAt);
     }
 }
