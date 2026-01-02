@@ -72,5 +72,24 @@ END
 \$\$;
 EOF
 
+# Initialize permission_db schema and data
+echo "Initializing permission_db..."
+PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d permission_db << EOF
+-- Check if tables already exist
+DO \$\$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'applications') THEN
+    -- Execute schema
+    \i src/backend/permission-service/src/main/resources/schema.sql
+    -- Execute data
+    \i src/backend/permission-service/src/main/resources/data.sql
+    RAISE NOTICE 'permission_db initialized successfully';
+  ELSE
+    RAISE NOTICE 'permission_db tables already exist, skipping initialization';
+  END IF;
+END
+\$\$;
+EOF
+
 echo "Database initialization completed!"
 echo "Post-create setup completed!"
