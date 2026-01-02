@@ -4,32 +4,41 @@ This directory contains SQL initialization scripts for PostgreSQL databases in t
 
 ## DRY Approach
 
-**Important**: These scripts use a DRY (Don't Repeat Yourself) approach by referencing the original SQL files from each service's `src/main/resources` directory instead of duplicating code. This ensures:
+**Important**: Database initialization uses a DRY (Don't Repeat Yourself) approach via the postCreateCommand script. The actual schema and data files are referenced from each service's `src/main/resources` directory, ensuring:
 - Single source of truth for schema and data
 - No sync issues between init scripts and service resources
 - Easier maintenance when schemas change
 
 ## Scripts Execution Order
 
-PostgreSQL executes scripts in `/docker-entrypoint-initdb.d` in alphabetical order during container initialization:
-
+### During Container First Start (via `/docker-entrypoint-initdb.d`)
 1. **01-create-databases.sql** - Creates the three databases (auth_db, user_db, permission_db)
-2. **02-init-auth-db.sql** - Connects to auth_db and executes schema/data from `auth-service/src/main/resources/`
-3. **03-init-user-db.sql** - Connects to user_db and executes schema/data from `user-service/src/main/resources/`
+
+### During DevContainer Post-Create (via `post-create.sh`)
+2. **Auth DB Initialization** - Executes schema/data from `auth-service/src/main/resources/`
+3. **User DB Initialization** - Executes schema/data from `user-service/src/main/resources/`
 
 ## How It Works
 
-The PostgreSQL container has the backend source directory mounted at `/backend-src`:
-```yaml
-volumes:
-  - ../../src/backend:/backend-src:ro
-```
+The `post-create.sh` script runs after the DevContainer is created and:
+1. Waits for PostgreSQL to be ready
+2. Creates databases if they don't exist
+3. Checks if tables exist in each database
+4. If tables don't exist, executes the schema.sql and data.sql from service resources using `\i` command
+5. Skips initialization if tables already exist (idempotent)
 
-Init scripts use PostgreSQL's `\i` command to include SQL files from the mounted resources:
-```sql
-\c user_db;
-\i /backend-src/user-service/src/main/resources/schema.sql
-\i /backend-src/user-service/src/main/resources/data.sql
+Example from post-create.sh:
+```bash
+PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d auth_db << EOF
+DO \$\$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_tables WHERE tablename = 'users') THEN
+    \i src/backend/auth-service/src/main/resources/schema.sql
+    \i src/backend/auth-service/src/main/resources/data.sql
+  END IF;
+END
+\$\$;
+EOF
 ```
 
 ## Database Initialization
@@ -52,13 +61,14 @@ Init scripts use PostgreSQL's `\i` command to include SQL files from the mounted
 
 ## Notes
 
-- Scripts run only on first container creation (when database volume is empty)
-- To re-run initialization, delete the Docker volume: `docker volume rm ws-demo-angular_postgres-data`
-- Each service's Spring Boot configuration also includes schema/data initialization, but this DevContainer setup ensures databases are ready before services start
+- Database creation runs only on first container start (when volume is empty)
+- Schema/data initialization runs during postCreateCommand, checking for existing tables first
+- Initialization is idempotent - safe to rebuild container without data loss
+- To force re-initialization, delete the Docker volume: `docker volume rm ws-demo-angular_postgres-data`
 
 ## Maintenance
 
 **No duplication!** When updating service schemas or seed data:
 1. Update only the files in `src/backend/{service}/src/main/resources/`
-2. The init scripts will automatically use the updated files
+2. The post-create script will automatically use the updated files
 3. Rebuild the DevContainer or delete and recreate the database volume to apply changes
