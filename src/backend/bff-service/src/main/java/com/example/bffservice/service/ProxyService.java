@@ -9,12 +9,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
+
 /**
  * Service for proxying requests to backend services
  */
 @Slf4j
 @Service
 public class ProxyService {
+
+    private static final Set<HttpMethod> METHODS_WITH_BODY = Set.of(
+            HttpMethod.POST,
+            HttpMethod.PUT,
+            HttpMethod.PATCH
+    );
 
     private final WebClient authServiceClient;
     private final WebClient userServiceClient;
@@ -91,7 +99,7 @@ public class ProxyService {
                 });
 
         Mono<ResponseEntity<T>> responseMono;
-        if (body != null && (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH)) {
+        if (body != null && METHODS_WITH_BODY.contains(method)) {
             responseMono = requestSpec
                     .bodyValue(body)
                     .retrieve()
@@ -102,6 +110,7 @@ public class ProxyService {
                     .toEntity(responseType);
         }
 
+        // Note: Using block() for simplicity. For production use, consider making this reactive.
         return responseMono.block();
     }
 
