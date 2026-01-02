@@ -15,7 +15,6 @@ import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.util.Date;
 
 /**
  * JWT Token Validator for validating JWT tokens
@@ -76,9 +75,10 @@ public class JwtValidator {
     public boolean isTokenExpired(String token) {
         try {
             Claims claims = validateToken(token);
-            return claims.getExpiration().before(new Date());
-        } catch (ExpiredJwtException ex) {
-            return true;
+            return false; // If validation succeeds without exception, token is not expired
+        } catch (RuntimeException ex) {
+            // If the exception message contains "Expired", the token is expired
+            return ex.getMessage() != null && ex.getMessage().contains("Expired");
         }
     }
 

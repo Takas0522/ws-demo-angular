@@ -25,11 +25,13 @@ public class RestTemplateConfig {
      * Create RestTemplate with configured timeout
      *
      * @param builder RestTemplateBuilder
+     * @param requestFactory ClientHttpRequestFactory with timeout settings
      * @return Configured RestTemplate
      */
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    public RestTemplate restTemplate(RestTemplateBuilder builder, ClientHttpRequestFactory requestFactory) {
         return builder
+                .requestFactory(() -> requestFactory)
                 .setConnectTimeout(Duration.ofSeconds(TIMEOUT_SECONDS))
                 .setReadTimeout(Duration.ofSeconds(TIMEOUT_SECONDS))
                 .build();
