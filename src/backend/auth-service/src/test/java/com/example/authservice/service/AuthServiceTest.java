@@ -125,9 +125,18 @@ class AuthServiceTest {
     @Test
     void testLoginDisabledAccount() {
         // Arrange
-        testUser.setEnabled(false);
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
-        when(passwordEncoder.matches("password123", testUser.getPassword())).thenReturn(true);
+        User disabledUser = User.builder()
+                .id(1L)
+                .username("testuser")
+                .password("$2a$10$hashedpassword")
+                .email("test@example.com")
+                .enabled(false)
+                .accountNonExpired(true)
+                .accountNonLocked(true)
+                .credentialsNonExpired(true)
+                .build();
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(disabledUser));
+        when(passwordEncoder.matches("password123", disabledUser.getPassword())).thenReturn(true);
         
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> authService.login(loginRequest));

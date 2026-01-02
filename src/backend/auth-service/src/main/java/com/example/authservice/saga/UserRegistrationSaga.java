@@ -147,7 +147,7 @@ public class UserRegistrationSaga {
     )
     @Transactional
     public User createUserWithRetry(RegisterRequest request) {
-        log.info("Creating user: username={}, attempt={}", request.getUsername(), MAX_ATTEMPTS);
+        log.info("Creating user: username={}", request.getUsername());
         
         User user = User.builder()
                 .username(request.getUsername())

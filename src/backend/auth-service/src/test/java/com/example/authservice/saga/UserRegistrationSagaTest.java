@@ -135,8 +135,7 @@ class UserRegistrationSagaTest {
         
         // Assert
         assertNotNull(result);
-        assertTrue(result.getStatus() == SagaState.SagaStatus.COMPENSATED || 
-                   result.getStatus() == SagaState.SagaStatus.COMPENSATING);
+        assertEquals(SagaState.SagaStatus.COMPENSATED, result.getStatus());
         
         verify(sagaOrchestrator).createSaga(eq("USER_REGISTRATION"), anyString());
         verify(userRepository).existsByUsername("newuser");
