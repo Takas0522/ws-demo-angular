@@ -60,3 +60,24 @@ CREATE INDEX idx_user_app_permissions_user_id ON user_app_permissions(user_id);
 CREATE INDEX idx_user_app_permissions_application_id ON user_app_permissions(application_id);
 CREATE INDEX idx_user_app_permissions_permission_level_id ON user_app_permissions(permission_level_id);
 CREATE INDEX idx_user_app_permissions_expires_at ON user_app_permissions(expires_at);
+
+-- Permission Audit Log table
+-- Records all changes to user permissions for audit purposes
+CREATE TABLE permission_audit_log (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    application_id BIGINT NOT NULL,
+    permission_level_id BIGINT,
+    action VARCHAR(20) NOT NULL,
+    performed_by VARCHAR(50) NOT NULL,
+    performed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    old_permission_level_id BIGINT,
+    new_permission_level_id BIGINT,
+    details TEXT
+);
+
+-- Create indexes for faster lookups
+CREATE INDEX idx_permission_audit_log_user_id ON permission_audit_log(user_id);
+CREATE INDEX idx_permission_audit_log_application_id ON permission_audit_log(application_id);
+CREATE INDEX idx_permission_audit_log_performed_at ON permission_audit_log(performed_at);
+CREATE INDEX idx_permission_audit_log_action ON permission_audit_log(action);
