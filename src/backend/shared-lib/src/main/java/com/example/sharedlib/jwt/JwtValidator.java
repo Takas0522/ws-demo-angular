@@ -37,11 +37,11 @@ public class JwtValidator {
      */
     public Claims validateToken(String token) {
         try {
-            return Jwts.parser()
-                    .verifyWith(getPublicKey())
+            return Jwts.parserBuilder()
+                    .setSigningKey(getPublicKey())
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                    .parseClaimsJws(token)
+                    .getBody();
         } catch (SignatureException ex) {
             throw new RuntimeException("Invalid JWT signature", ex);
         } catch (MalformedJwtException ex) {

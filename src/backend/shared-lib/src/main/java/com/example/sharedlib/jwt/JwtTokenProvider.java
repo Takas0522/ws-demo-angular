@@ -40,11 +40,11 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
         return Jwts.builder()
-                .subject(subject)
-                .claims(claims)
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(getPrivateKey(), Jwts.SIG.RS256)
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getPrivateKey(), io.jsonwebtoken.SignatureAlgorithm.RS256)
                 .compact();
     }
 

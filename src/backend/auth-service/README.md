@@ -88,7 +88,7 @@ jwt:
 ## ビルド
 
 ```bash
-cd backend/auth-service
+cd src/backend/auth-service
 mvn clean install
 ```
 
@@ -108,11 +108,12 @@ mvn test
 
 ## 依存関係
 
-- Spring Boot 3.2.0
+- Spring Boot 2.7.18
 - Spring Data JPA
 - Spring Security
 - PostgreSQL
 - Shared Library (JWT, DTOs)
+- Java 11
 
 ## 環境変数
 
