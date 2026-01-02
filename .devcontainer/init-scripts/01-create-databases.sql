@@ -5,10 +5,10 @@
 -- 3. permission_db: Permission management service database
 
 -- Create auth_db
-CREATE DATABASE auth_db;
+CREATE DATABASE auth_db WITH OWNER = postgres;
 
 -- Create user_db
-CREATE DATABASE user_db;
+CREATE DATABASE user_db WITH OWNER = postgres;
 
 -- Create permission_db
-CREATE DATABASE permission_db;
+CREATE DATABASE permission_db WITH OWNER = postgres;
