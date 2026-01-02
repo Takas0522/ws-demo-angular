@@ -16,12 +16,15 @@ import reactor.core.publisher.Mono;
 @Service
 public class ProxyService {
 
-    private final WebClient.Builder webClientBuilder;
-    private final BackendServiceConfig backendServiceConfig;
+    private final WebClient authServiceClient;
+    private final WebClient userServiceClient;
+    private final WebClient permissionServiceClient;
 
     public ProxyService(WebClient.Builder webClientBuilder, BackendServiceConfig backendServiceConfig) {
-        this.webClientBuilder = webClientBuilder;
-        this.backendServiceConfig = backendServiceConfig;
+        // Create and cache WebClient instances for each backend service
+        this.authServiceClient = webClientBuilder.baseUrl(backendServiceConfig.getAuth().getUrl()).build();
+        this.userServiceClient = webClientBuilder.baseUrl(backendServiceConfig.getUser().getUrl()).build();
+        this.permissionServiceClient = webClientBuilder.baseUrl(backendServiceConfig.getPermission().getUrl()).build();
     }
 
     /**
@@ -33,7 +36,7 @@ public class ProxyService {
             Object body,
             HttpHeaders headers,
             Class<T> responseType) {
-        return forwardRequest(backendServiceConfig.getAuth().getUrl(), path, method, body, headers, responseType);
+        return forwardRequest(authServiceClient, path, method, body, headers, responseType);
     }
 
     /**
@@ -45,7 +48,7 @@ public class ProxyService {
             Object body,
             HttpHeaders headers,
             Class<T> responseType) {
-        return forwardRequest(backendServiceConfig.getUser().getUrl(), path, method, body, headers, responseType);
+        return forwardRequest(userServiceClient, path, method, body, headers, responseType);
     }
 
     /**
@@ -57,23 +60,21 @@ public class ProxyService {
             Object body,
             HttpHeaders headers,
             Class<T> responseType) {
-        return forwardRequest(backendServiceConfig.getPermission().getUrl(), path, method, body, headers, responseType);
+        return forwardRequest(permissionServiceClient, path, method, body, headers, responseType);
     }
 
     /**
      * Generic method to forward requests to backend services
      */
     private <T> ResponseEntity<T> forwardRequest(
-            String baseUrl,
+            WebClient webClient,
             String path,
             HttpMethod method,
             Object body,
             HttpHeaders headers,
             Class<T> responseType) {
 
-        log.debug("Forwarding {} request to {}{}", method, baseUrl, path);
-
-        WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
+        log.debug("Forwarding {} request to {}", method, path);
 
         WebClient.RequestBodySpec requestSpec = webClient
                 .method(method)

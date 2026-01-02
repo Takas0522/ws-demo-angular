@@ -1,8 +1,8 @@
 package com.example.bffservice.controller;
 
 import com.example.bffservice.service.ProxyService;
+import com.example.bffservice.util.HeaderUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +34,7 @@ public class UserController {
                 "/api/users",
                 HttpMethod.GET,
                 null,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
     }
@@ -49,7 +49,7 @@ public class UserController {
                 "/api/users/" + userId,
                 HttpMethod.GET,
                 null,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
     }
@@ -64,7 +64,7 @@ public class UserController {
                 "/api/users",
                 HttpMethod.POST,
                 request,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
     }
@@ -82,7 +82,7 @@ public class UserController {
                 "/api/users/" + userId,
                 HttpMethod.PUT,
                 request,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
     }
@@ -97,21 +97,8 @@ public class UserController {
                 "/api/users/" + userId,
                 HttpMethod.DELETE,
                 null,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
-    }
-
-    /**
-     * Extract headers from the incoming request
-     */
-    private HttpHeaders extractHeaders(HttpServletRequest request) {
-        HttpHeaders headers = new HttpHeaders();
-        java.util.Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            headers.add(headerName, request.getHeader(headerName));
-        }
-        return headers;
     }
 }

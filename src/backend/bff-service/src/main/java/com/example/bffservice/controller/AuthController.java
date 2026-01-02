@@ -1,8 +1,8 @@
 package com.example.bffservice.controller;
 
 import com.example.bffservice.service.ProxyService;
+import com.example.bffservice.util.HeaderUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +34,7 @@ public class AuthController {
                 "/api/auth/login",
                 HttpMethod.POST,
                 request,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
     }
@@ -49,7 +49,7 @@ public class AuthController {
                 "/api/auth/refresh",
                 HttpMethod.POST,
                 request,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
     }
@@ -64,7 +64,7 @@ public class AuthController {
                 "/api/auth/logout",
                 HttpMethod.POST,
                 request,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
     }
@@ -79,21 +79,8 @@ public class AuthController {
                 "/api/auth/register",
                 HttpMethod.POST,
                 request,
-                extractHeaders(httpRequest),
+                HeaderUtil.extractHeaders(httpRequest),
                 Object.class
         );
-    }
-
-    /**
-     * Extract headers from the incoming request
-     */
-    private HttpHeaders extractHeaders(HttpServletRequest request) {
-        HttpHeaders headers = new HttpHeaders();
-        java.util.Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            headers.add(headerName, request.getHeader(headerName));
-        }
-        return headers;
     }
 }
