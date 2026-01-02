@@ -1,2 +1,18 @@
 # RSA keys for JWT signing - should not be committed
 .devcontainer/keys/*.pem
+
+# Maven build artifacts
+**/target/
+*.jar
+*.war
+*.ear
+*.class
+.mvn/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
