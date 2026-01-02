@@ -17,6 +17,7 @@ This directory contains SQL initialization scripts for PostgreSQL databases in t
 ### During DevContainer Post-Create (via `post-create.sh`)
 2. **Auth DB Initialization** - Executes schema/data from `auth-service/src/main/resources/`
 3. **User DB Initialization** - Executes schema/data from `user-service/src/main/resources/`
+4. **Permission DB Initialization** - Executes schema/data from `permission-service/src/main/resources/`
 
 ## How It Works
 
@@ -57,7 +58,12 @@ EOF
   - Profile information, contact details, addresses
 
 ### Permission DB (permission_db)
-- **Status**: Not yet initialized (placeholder for future implementation)
+- **Source**: `permission-service/src/main/resources/schema.sql` and `data.sql`
+- **Schema**: applications, permission_levels, user_app_permissions tables
+- **Seed Data**: 
+  - 10 sample applications (USER_MGMT, INVENTORY, SALES_DASH, CUSTOMER_PORTAL, REPORTING, HR_SYSTEM, FINANCE, PROJECT_MGMT, DOC_MGMT, ANALYTICS)
+  - 3 permission levels (READ, WRITE, ADMIN) with ordering
+  - 19 sample user-app-permission mappings for testing
 
 ## Notes
 
