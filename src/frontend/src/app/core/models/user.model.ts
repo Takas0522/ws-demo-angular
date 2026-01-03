@@ -1,3 +1,16 @@
+// User entity (from auth-service)
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  enabled: boolean;
+  accountNonExpired: boolean;
+  accountNonLocked: boolean;
+  credentialsNonExpired: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // User profile models
 export interface UserProfile {
   id: number;
@@ -16,6 +29,13 @@ export interface UserProfile {
   postalCode?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+// Combined user with profile (for list view)
+export interface UserWithProfile extends UserProfile {
+  username: string;
+  email: string;
+  enabled: boolean;
 }
 
 export interface CreateUserProfileRequest {
