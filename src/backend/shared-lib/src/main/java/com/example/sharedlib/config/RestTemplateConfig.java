@@ -42,8 +42,8 @@ public class RestTemplateConfig {
      *
      * @return Configured RetryTemplate
      */
-    @Bean
-    public RetryTemplate retryTemplate() {
+    @Bean(name = "restTemplateRetryTemplate")
+    public RetryTemplate restTemplateRetryTemplate() {
         return RetryTemplate.builder()
                 .maxAttempts(MAX_RETRY_ATTEMPTS)
                 .fixedBackoff(1000) // 1 second between retries

@@ -2,6 +2,7 @@ package com.example.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * User Service Application
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * in a microservices architecture.
  */
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.example.userservice", "com.example.sharedlib"})
 public class UserServiceApplication {
 
     public static void main(String[] args) {

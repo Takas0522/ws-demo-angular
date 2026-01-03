@@ -27,8 +27,8 @@ public class DataSourceConfig {
      * Configure retry template for database operations
      * @return RetryTemplate configured with retry policy
      */
-    @Bean
-    public RetryTemplate retryTemplate() {
+    @Bean(name = "dataSourceRetryTemplate")
+    public RetryTemplate dataSourceRetryTemplate() {
         RetryTemplate retryTemplate = new RetryTemplate();
 
         // Retry up to 5 times
@@ -53,11 +53,11 @@ public class DataSourceConfig {
      * @return DataSource with retry capability
      */
     @Bean
-    public DataSource dataSource(DataSourceProperties properties, RetryTemplate retryTemplate) {
+    public DataSource dataSource(DataSourceProperties properties, RetryTemplate dataSourceRetryTemplate) {
         log.info("Configuring DataSource with retry capability");
         
         try {
-            return retryTemplate.execute(context -> {
+            return dataSourceRetryTemplate.execute(context -> {
                 log.info("Attempting to connect to database (attempt {})", context.getRetryCount() + 1);
                 try {
                     DataSource dataSource = properties.initializeDataSourceBuilder().build();
