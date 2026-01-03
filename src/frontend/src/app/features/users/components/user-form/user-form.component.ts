@@ -32,7 +32,7 @@ export class UserFormComponent implements OnInit {
    */
   initForm(): void {
     this.userForm = this.formBuilder.group({
-      userId: [this.user?.userId || '', this.isEditMode ? [] : [Validators.required, Validators.min(1)]],
+      userId: [this.user?.userId || null, this.isEditMode ? [] : [Validators.required, Validators.min(1)]],
       firstName: [this.user?.firstName || '', [Validators.required, Validators.maxLength(50)]],
       lastName: [this.user?.lastName || '', [Validators.required, Validators.maxLength(50)]],
       displayName: [this.user?.displayName || '', [Validators.required, Validators.maxLength(100)]],

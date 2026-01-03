@@ -19,7 +19,7 @@ export class UserListComponent implements OnInit {
   totalPages = 1;
   
   // Sort
-  sortField: keyof UserProfile = 'userId';
+  sortField: keyof UserProfile = 'displayName';
   sortDirection: 'asc' | 'desc' = 'asc';
   
   // Form state
