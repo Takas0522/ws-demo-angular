@@ -1,0 +1,22 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  // Feature modules will be lazy loaded here
+  // Example:
+  // {
+  //   path: 'login',
+  //   loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
+  // },
+  // {
+  //   path: 'dashboard',
+  //   loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule),
+  //   canActivate: [AuthGuard]
+  // }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
