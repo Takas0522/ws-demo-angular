@@ -70,6 +70,28 @@ JWT ベースの認証とリフレッシュトークン管理を提供します�
 
 詳細: [Shared Library README](src/backend/shared-lib/README.md)
 
+### Frontend (Angular)
+Angular 16 で構築されたシングルページアプリケーション（SPA）。
+
+**主な機能:**
+- JWT ベースの認証システム
+- BFF Service との統合
+- レスポンシブ UI（Tailwind CSS）
+- ReactiveForm による入力バリデーション
+
+詳細: [Frontend README](src/frontend/README.md)
+
+**テストユーザー:**
+
+アプリケーションにログインするには、以下のテストユーザーを使用できます：
+
+| ユーザー名 | パスワード | 説明 |
+|-----------|----------|------|
+| admin | password123 | 管理者ユーザー |
+| user1 | password123 | 通常ユーザー1 |
+| user2 | password123 | 通常ユーザー2 |
+| user3 | password123 | 通常ユーザー3 |
+
 ## 開発環境セットアップ
 
 ### 前提条件
@@ -125,6 +147,15 @@ mvn spring-boot:run
 cd src/backend/permission-service
 mvn spring-boot:run
 ```
+
+#### Frontend (Angular)
+```bash
+cd src/frontend
+npm install  # 初回のみ
+npm start
+```
+
+フロントエンドは `http://localhost:4200` で起動します。
 
 ## API エンドポイント
 
@@ -187,6 +218,13 @@ mvn test
 ```
 
 ## 技術スタック
+
+### Frontend
+- Angular 16
+- TypeScript 5.1
+- RxJS 7.8
+- Tailwind CSS 3.4
+- Reactive Forms
 
 ### Backend
 - Java 11
