@@ -2,6 +2,7 @@
 -- This schema defines tables for application permissions and user access
 
 -- Drop tables if they exist (for development/testing)
+DROP TABLE IF EXISTS permission_audit_log CASCADE;
 DROP TABLE IF EXISTS user_app_permissions CASCADE;
 DROP TABLE IF EXISTS permission_levels CASCADE;
 DROP TABLE IF EXISTS applications CASCADE;

@@ -102,12 +102,10 @@ public class ProxyService {
         if (body != null && METHODS_WITH_BODY.contains(method)) {
             responseMono = requestSpec
                     .bodyValue(body)
-                    .retrieve()
-                    .toEntity(responseType);
+                    .exchangeToMono(response -> response.toEntity(responseType));
         } else {
             responseMono = requestSpec
-                    .retrieve()
-                    .toEntity(responseType);
+                    .exchangeToMono(response -> response.toEntity(responseType));
         }
 
         // Note: Using block() for simplicity. For production use, consider making this reactive.
