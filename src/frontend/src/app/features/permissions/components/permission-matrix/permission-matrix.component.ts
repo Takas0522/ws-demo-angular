@@ -4,11 +4,6 @@ import { UserService } from '../../../../core/services/user.service';
 import { Application, PermissionLevel, UserPermission } from '../../../../core/models/permission.model';
 import { UserProfile } from '../../../../core/models/user.model';
 
-interface PermissionCell {
-  applicationId: number;
-  permissionLevelId: number | null;
-}
-
 @Component({
   selector: 'app-permission-matrix',
   templateUrl: './permission-matrix.component.html',
@@ -179,7 +174,9 @@ export class PermissionMatrixComponent implements OnInit {
       next: () => {
         this.successMessage = '権限を正常に保存しました。';
         this.saving = false;
-        // Reload permissions to ensure UI is in sync
+        // Reload permissions to ensure UI is in sync with backend
+        // This is important because the backend may have applied additional logic
+        // (e.g., audit logs, timestamps) that should be reflected in the UI
         if (this.selectedUserId) {
           this.loadUserPermissions(this.selectedUserId);
         }

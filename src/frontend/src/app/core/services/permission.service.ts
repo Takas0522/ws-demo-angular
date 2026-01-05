@@ -42,7 +42,8 @@ export class PermissionService {
 
   /**
    * Get all permission levels
-   * Note: This endpoint doesn't exist yet in the backend, so we'll use hardcoded values
+   * TODO: Replace with actual API call when backend endpoint is available
+   * For now, using hardcoded values based on backend data.sql
    */
   getPermissionLevels(): Observable<PermissionLevel[]> {
     // Hardcoded permission levels based on the backend data.sql
