@@ -1,0 +1,30 @@
+# RSA keys for JWT signing - should not be committed
+.devcontainer/keys/*.pem
+keys/*.pem
+
+# Maven build artifacts
+**/target/
+*.jar
+*.war
+*.ear
+*.class
+.mvn/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Angular build artifacts
+frontend/dist/
+frontend/.angular/
+frontend/node_modules/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnp.*
+frontend/.DS_Store
+

@@ -1,0 +1,35 @@
+package com.example.userservice.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+/**
+ * DTO for user profile (public API)
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserProfileDto {
+    private Long id;
+    private Long userId;
+    private String firstName;
+    private String lastName;
+    private String displayName;
+    private String bio;
+    private String avatarUrl;
+    private String phoneNumber;
+    private LocalDate dateOfBirth;
+    private String address;
+    private String city;
+    private String state;
+    private String country;
+    private String postalCode;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}

@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: user-service
+  
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOSTNAME:localhost}:5432/user_db
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+  
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+  
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      continue-on-error: false
+
+server:
+  port: 8082
+
+# JWT Configuration
+jwt:
+  public-key-path: ${JWT_PUBLIC_KEY_PATH:/keys/public_key.pem}
+
+# Logging
+logging:
+  level:
+    com.example.userservice: DEBUG
+    org.springframework.retry: DEBUG
+    org.hibernate.SQL: DEBUG
+    com.zaxxer.hikari: DEBUG
