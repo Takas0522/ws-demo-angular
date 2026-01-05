@@ -70,10 +70,7 @@ export class PermissionService {
       }
     ];
     
-    return new Observable(observer => {
-      observer.next(permissionLevels);
-      observer.complete();
-    });
+    return of(permissionLevels);
   }
 
   /**

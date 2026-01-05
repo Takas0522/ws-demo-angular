@@ -83,14 +83,8 @@
                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                   なし
                 </th>
-                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Read
-                </th>
-                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Write
-                </th>
-                <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Admin
+                <th *ngFor="let level of permissionLevels" scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {{ level.levelName }}
                 </th>
               </tr>
             </thead>
@@ -111,36 +105,18 @@
                     class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                   />
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">
+                <td *ngFor="let level of permissionLevels" class="px-6 py-4 whitespace-nowrap text-center">
                   <input
                     type="radio"
                     [name]="'permission-' + app.id"
-                    [checked]="isPermissionSelected(app.id, 1)"
-                    (change)="updatePermission(app.id, 1)"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                  />
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">
-                  <input
-                    type="radio"
-                    [name]="'permission-' + app.id"
-                    [checked]="isPermissionSelected(app.id, 2)"
-                    (change)="updatePermission(app.id, 2)"
-                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                  />
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center">
-                  <input
-                    type="radio"
-                    [name]="'permission-' + app.id"
-                    [checked]="isPermissionSelected(app.id, 3)"
-                    (change)="updatePermission(app.id, 3)"
+                    [checked]="isPermissionSelected(app.id, level.id)"
+                    (change)="updatePermission(app.id, level.id)"
                     class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                   />
                 </td>
               </tr>
               <tr *ngIf="applications.length === 0">
-                <td colspan="5" class="px-6 py-8 text-center text-sm text-gray-500">
+                <td [attr.colspan]="permissionLevels.length + 2" class="px-6 py-8 text-center text-sm text-gray-500">
                   アプリケーションが見つかりません
                 </td>
               </tr>

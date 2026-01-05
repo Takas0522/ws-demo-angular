@@ -144,7 +144,7 @@ export class PermissionMatrixComponent implements OnInit {
    * Get permission level ID for an application
    */
   getPermissionLevelId(applicationId: number): number | null {
-    return this.permissionMatrix.get(applicationId) || null;
+    return this.permissionMatrix.get(applicationId) ?? null;
   }
 
   /**
