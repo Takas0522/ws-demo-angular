@@ -11,6 +11,11 @@ else
   echo "JWT RSA keys already exist, skipping generation"
 fi
 
+# Create symlink for keys directory (required for services to access keys at /keys/)
+echo "Creating symlink for keys directory..."
+sudo ln -sf /workspaces/$(basename "$PWD")/keys /keys
+echo "Symlink created: /keys -> /workspaces/$(basename "$PWD")/keys"
+
 # Install npm dependencies if package.json exists
 if [ -f package.json ]; then
   echo "Installing npm dependencies..."
@@ -36,60 +41,42 @@ PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -f .devcontainer/init-sc
 
 # Initialize auth_db schema and data
 echo "Initializing auth_db..."
-PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d auth_db << EOF
--- Check if tables already exist
-DO \$\$
-BEGIN
-  IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'users') THEN
-    -- Execute schema
-    \i src/backend/auth-service/src/main/resources/schema.sql
-    -- Execute data
-    \i src/backend/auth-service/src/main/resources/data.sql
-    RAISE NOTICE 'auth_db initialized successfully';
-  ELSE
-    RAISE NOTICE 'auth_db tables already exist, skipping initialization';
-  END IF;
-END
-\$\$;
-EOF
+# Check if tables already exist
+TABLE_EXISTS=$(PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d auth_db -tAc "SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'users');")
+if [ "$TABLE_EXISTS" = "f" ]; then
+  echo "Initializing auth_db schema and data..."
+  PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d auth_db -f src/backend/auth-service/src/main/resources/schema.sql
+  PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d auth_db -f src/backend/auth-service/src/main/resources/data.sql
+  echo "auth_db initialized successfully"
+else
+  echo "auth_db tables already exist, skipping initialization"
+fi
 
 # Initialize user_db schema and data
 echo "Initializing user_db..."
-PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d user_db << EOF
--- Check if tables already exist
-DO \$\$
-BEGIN
-  IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'user_profiles') THEN
-    -- Execute schema
-    \i src/backend/user-service/src/main/resources/schema.sql
-    -- Execute data
-    \i src/backend/user-service/src/main/resources/data.sql
-    RAISE NOTICE 'user_db initialized successfully';
-  ELSE
-    RAISE NOTICE 'user_db tables already exist, skipping initialization';
-  END IF;
-END
-\$\$;
-EOF
+# Check if tables already exist
+TABLE_EXISTS=$(PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d user_db -tAc "SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'user_profiles');")
+if [ "$TABLE_EXISTS" = "f" ]; then
+  echo "Initializing user_db schema and data..."
+  PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d user_db -f src/backend/user-service/src/main/resources/schema.sql
+  PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d user_db -f src/backend/user-service/src/main/resources/data.sql
+  echo "user_db initialized successfully"
+else
+  echo "user_db tables already exist, skipping initialization"
+fi
 
 # Initialize permission_db schema and data
 echo "Initializing permission_db..."
-PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d permission_db << EOF
--- Check if tables already exist
-DO \$\$
-BEGIN
-  IF NOT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'applications') THEN
-    -- Execute schema
-    \i src/backend/permission-service/src/main/resources/schema.sql
-    -- Execute data
-    \i src/backend/permission-service/src/main/resources/data.sql
-    RAISE NOTICE 'permission_db initialized successfully';
-  ELSE
-    RAISE NOTICE 'permission_db tables already exist, skipping initialization';
-  END IF;
-END
-\$\$;
-EOF
+# Check if tables already exist
+TABLE_EXISTS=$(PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d permission_db -tAc "SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'applications');")
+if [ "$TABLE_EXISTS" = "f" ]; then
+  echo "Initializing permission_db schema and data..."
+  PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d permission_db -f src/backend/permission-service/src/main/resources/schema.sql
+  PGPASSWORD=postgres psql -h wsdemoangulardb -U postgres -d permission_db -f src/backend/permission-service/src/main/resources/data.sql
+  echo "permission_db initialized successfully"
+else
+  echo "permission_db tables already exist, skipping initialization"
+fi
 
 echo "Database initialization completed!"
 echo "Post-create setup completed!"
