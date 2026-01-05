@@ -13,6 +13,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'permissions',
+    loadChildren: () => import('./features/permissions/permissions.module').then(m => m.PermissionsModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: '',
     redirectTo: '/users',
     pathMatch: 'full'
