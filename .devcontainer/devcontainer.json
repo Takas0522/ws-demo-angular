@@ -41,7 +41,14 @@
 	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "bash .devcontainer/post-create.sh"
+	"postCreateCommand": "bash .devcontainer/post-create.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"bierner.markdown-mermaid"
+			]
+		}
+	}
 
 	// Configure tool-specific properties.
 	// "customizations": {},
